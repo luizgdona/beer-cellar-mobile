@@ -47,7 +47,7 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "testPathIgnorePatterns": ["/node_modules/", "/src/__tests__/"],
+    "testPathIgnorePatterns": ["/node_modules/", "/src/__tests__/", "/__tests__/setup\\.ts$"],
     "setupFiles": [
       "<rootDir>/__tests__/setup.ts"
     ],
