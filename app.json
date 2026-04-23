@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Beer Cellar",
+    "slug": "beer-cellar",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "beer-cellar",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.beercellar.app"
+    },
+    "android": {
+      "package": "com.beercellar.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0c0a07"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "color": "#e8a530",
+          "sounds": []
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Beer Cellar needs access to your photos to add beer images.",
+          "cameraPermission": "Beer Cellar needs access to your camera to take beer photos."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

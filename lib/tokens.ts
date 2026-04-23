@@ -1,0 +1,51 @@
+export const lightTokens = {
+  bg:          '#f5f0e8',
+  bgAlt:       '#ece6d9',
+  surface:     '#fefcf8',
+  surfaceAlt:  '#f7f2ea',
+  border:      'rgba(150,100,20,0.14)',
+  borderHover: 'rgba(150,100,20,0.30)',
+  fg:          '#1a1209',
+  fgMuted:     '#7a6b52',
+  accent:      '#c47c12',
+  accentDim:   'rgba(196,124,18,0.14)',
+  accentFg:    '#fefcf8',
+  consumed:    '#2d6a4f',
+  consumedDim: 'rgba(45,106,79,0.12)',
+  danger:      '#9e2c20',
+  dangerDim:   'rgba(158,44,32,0.10)',
+  shadow: {
+    shadowColor:   '#000',
+    shadowOffset:  { width: 0, height: 2 },
+    shadowOpacity: 0.07 as number,
+    shadowRadius:  8,
+    elevation:     3,
+  },
+} as const;
+
+export const darkTokens = {
+  bg:          '#0c0a07',
+  bgAlt:       '#131008',
+  surface:     '#181410',
+  surfaceAlt:  '#201c16',
+  border:      'rgba(220,155,45,0.12)',
+  borderHover: 'rgba(220,155,45,0.28)',
+  fg:          '#ede4d0',
+  fgMuted:     '#9c8a6e',
+  accent:      '#e8a530',
+  accentDim:   'rgba(232,165,48,0.14)',
+  accentFg:    '#0c0a07',
+  consumed:    '#52b788',
+  consumedDim: 'rgba(82,183,136,0.12)',
+  danger:      '#e05a4a',
+  dangerDim:   'rgba(224,90,74,0.12)',
+  shadow: {
+    shadowColor:   '#000',
+    shadowOffset:  { width: 0, height: 4 },
+    shadowOpacity: 0.40 as number,
+    shadowRadius:  16,
+    elevation:     8,
+  },
+} as const;
+
+export type ColorTokens = typeof lightTokens;
