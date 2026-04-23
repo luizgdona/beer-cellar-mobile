@@ -72,7 +72,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorStat
             <Text style={styles.title}>⚠️ Something went wrong</Text>
             <Text style={styles.message}>{this.state.error.message}</Text>
 
-            {true && (
+            {__DEV__ && (
               <>
                 <Text style={styles.stackTitle}>Stack trace:</Text>
                 <Text style={styles.stack}>{this.state.error.stack}</Text>

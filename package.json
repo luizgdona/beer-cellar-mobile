@@ -23,6 +23,7 @@
     "expo-linear-gradient": "~14.0.0",
     "expo-notifications": "~0.29.0",
     "expo-router": "~4.0.0",
+    "expo-secure-store": "^55.0.13",
     "expo-status-bar": "~2.0.1",
     "expo-system-ui": "~4.0.3",
     "lucide-react-native": "^0.454.0",
@@ -47,7 +48,11 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "testPathIgnorePatterns": ["/node_modules/", "/src/__tests__/", "/__tests__/setup\\.ts$"],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/src/__tests__/",
+      "/__tests__/setup\\.ts$"
+    ],
     "setupFiles": [
       "<rootDir>/__tests__/setup.ts"
     ],

@@ -2,7 +2,7 @@ import {
   createContext, useCallback, useContext,
   useEffect, useMemo, useState,
 } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import apiClient from '@/lib/api-client';
 
 export interface User {
@@ -38,9 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const restore = async () => {
       try {
         const [accessToken, refreshToken, userStr] = await Promise.all([
-          AsyncStorage.getItem('accessToken'),
-          AsyncStorage.getItem('refreshToken'),
-          AsyncStorage.getItem('user'),
+          SecureStore.getItemAsync('accessToken'),
+          SecureStore.getItemAsync('refreshToken'),
+          SecureStore.getItemAsync('user'),
         ]);
         if (accessToken && refreshToken && userStr) {
           setTokens({ accessToken, refreshToken });
@@ -57,9 +57,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(u);
     setTokens(t);
     await Promise.all([
-      AsyncStorage.setItem('accessToken', t.accessToken),
-      AsyncStorage.setItem('refreshToken', t.refreshToken),
-      AsyncStorage.setItem('user', JSON.stringify(u)),
+      SecureStore.setItemAsync('accessToken', t.accessToken),
+      SecureStore.setItemAsync('refreshToken', t.refreshToken),
+      SecureStore.setItemAsync('user', JSON.stringify(u)),
     ]);
   }, []);
 
@@ -67,9 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setTokens(null);
     await Promise.all([
-      AsyncStorage.removeItem('accessToken'),
-      AsyncStorage.removeItem('refreshToken'),
-      AsyncStorage.removeItem('user'),
+      SecureStore.deleteItemAsync('accessToken'),
+      SecureStore.deleteItemAsync('refreshToken'),
+      SecureStore.deleteItemAsync('user'),
     ]);
   }, []);
 
