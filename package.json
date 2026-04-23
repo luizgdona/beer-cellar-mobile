@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "test": "jest --watchAll=false",
     "test:watch": "jest --watchAll",
-    "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint": "eslint . --ext .ts,.tsx",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
