@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
 jest.mock('@/lib/api-client', () => ({
   __esModule: true,
@@ -20,7 +20,6 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 describe('AuthContext', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (AsyncStorage.clear as jest.Mock)();
   });
 
   it('starts unauthenticated when storage is empty', async () => {
@@ -46,7 +45,7 @@ describe('AuthContext', () => {
 
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.user?.email).toBe('test@test.com');
-    expect(await AsyncStorage.getItem('accessToken')).toBe('access123');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('accessToken', 'access123');
   });
 
   it('logs out and clears storage', async () => {
@@ -63,6 +62,6 @@ describe('AuthContext', () => {
     act(() => { result.current.logout(); });
 
     expect(result.current.isAuthenticated).toBe(false);
-    expect(await AsyncStorage.getItem('accessToken')).toBeNull();
+    expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('accessToken');
   });
 });

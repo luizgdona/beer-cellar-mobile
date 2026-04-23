@@ -2,6 +2,13 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
 
+const secureStoreMemory: Record<string, string> = {};
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn((key: string) => Promise.resolve(secureStoreMemory[key] ?? null)),
+  setItemAsync: jest.fn((key: string, value: string) => { secureStoreMemory[key] = value; return Promise.resolve(); }),
+  deleteItemAsync: jest.fn((key: string) => { delete secureStoreMemory[key]; return Promise.resolve(); }),
+}));
+
 jest.mock('expo-notifications', () => ({
   requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
   scheduleNotificationAsync: jest.fn().mockResolvedValue('notification-id-123'),
