@@ -38,7 +38,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<ThemeContextType>(
     () => ({
       isDark: theme === 'dark',
-      colors: theme === 'dark' ? darkTokens : lightTokens,
+      colors: (theme === 'dark' ? darkTokens : lightTokens) as ColorTokens,
       toggleTheme,
     }),
     [theme, toggleTheme]

@@ -25,7 +25,7 @@ async function scheduleReminder(beerId: string, name: string, brewery: string, d
       title: 'Time to open a beer! 🍺',
       body: `${name} from ${brewery} is ready to enjoy.`,
     },
-    trigger: { date },
+    trigger: { type: 'date' as const, date },
   });
   return id;
 }

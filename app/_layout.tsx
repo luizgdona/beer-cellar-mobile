@@ -11,7 +11,6 @@ import {
 import {
   DMSans_400Regular,
   DMSans_500Medium,
-  DMSans_600SemiBold,
   DMSans_700Bold,
 } from '@expo-google-fonts/dm-sans';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
@@ -42,7 +41,6 @@ export default function RootLayout() {
     PlayfairDisplay_700Bold,
     DMSans_400Regular,
     DMSans_500Medium,
-    DMSans_600SemiBold,
     DMSans_700Bold,
   });
 
