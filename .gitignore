@@ -6,3 +6,7 @@ dist/
 .DS_Store
 android/
 ios/
+
+ERROR_PERSISTENCE.md
+IMPLEMENTATION_SUMMARY.md
+*.md.bak
