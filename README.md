@@ -1,29 +1,34 @@
 # Beer Cellar — Mobile App
 
-A personal beer collection manager for iOS and Android. Track beers you own or have consumed, log tasting notes, manage purchase details, and receive consumption reminders — all from your phone.
+![Expo](https://img.shields.io/badge/Expo-52-000020?logo=expo)
+![React Native](https://img.shields.io/badge/React_Native-0.76-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5_strict-3178C6?logo=typescript)
+![iOS](https://img.shields.io/badge/iOS-supported-000000?logo=apple)
+![Android](https://img.shields.io/badge/Android-supported-3DDC84?logo=android)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-This is the React Native mobile client for the Beer Cellar platform. It connects to the Beer Cellar backend via a REST API.
+A personal beer collection manager for **iOS and Android**. Track beers you own or have consumed, log tasting notes, manage purchase details, and receive push notifications for consumption reminders.
+
+This is the React Native / Expo mobile client for the Beer Cellar platform. It connects to the [beer-cellar-backend](https://github.com/luizgdona/beer-cellar-backend) REST API.
 
 ---
 
-## Tech Stack
+## Built With
 
-| Concern | Technology | Rationale |
+| Layer | Technology | Version |
 |---|---|---|
-| Framework | React Native + Expo (Managed Workflow) | Avoids native code complexity; OTA updates via EAS |
-| Language | TypeScript (strict) | End-to-end type safety, consistent with backend and web |
-| Navigation | Expo Router (file-based) | Familiar file-system conventions; typed routes |
-| State management | Zustand | Lightweight, minimal boilerplate compared to Redux |
-| HTTP client | Axios | Same pattern as the web frontend; interceptor attaches Bearer token automatically |
-| UI primitives | expo-linear-gradient, expo-blur, react-native-svg, lucide-react-native | Rich visuals without heavy dependencies |
-| Fonts | @expo-google-fonts/dm-sans, @expo-google-fonts/playfair-display | Matches the Beer Cellar brand typography |
-| Token storage | @react-native-async-storage/async-storage | Standard React Native pattern for persistent auth tokens |
-| Media | expo-image-picker | Photo library and camera access with declarative permissions |
-| Push notifications | expo-notifications | Consumption reminders delivered natively |
-| Renderer | New Architecture (`newArchEnabled: true`) | Fabric renderer + JSI for improved performance |
-| Testing | Jest + Testing Library (React Native) | Unit and component tests |
-| Orientation | Portrait only | Designed for single-hand mobile use |
-| Bundle IDs | `com.beercellar.app` (iOS + Android) | Unified identifier across platforms |
+| Framework | Expo (Managed Workflow) | 52 |
+| UI Library | React Native | 0.76 |
+| Language | TypeScript (strict) | 5 |
+| Routing | Expo Router (file-based, typed) | 4 |
+| State management | Zustand | 5 |
+| HTTP Client | Axios | 1.17+ |
+| Token storage | Expo SecureStore | — |
+| Push notifications | expo-notifications | — |
+| Media picker | expo-image-picker | — |
+| Icons | Lucide React Native | — |
+| Renderer | New Architecture (Fabric + JSI) | — |
+| Testing | Jest + Testing Library React Native | 29 |
 
 ---
 
@@ -34,25 +39,24 @@ beer-cellar-mobile/
 ├── app/                  # Expo Router pages (file-based routing)
 │   ├── _layout.tsx       # Root layout — providers, fonts, navigation shell
 │   ├── index.tsx         # Entry route (redirects based on auth state)
-│   ├── (auth)/           # Unauthenticated routes (login, register)
-│   └── (app)/            # Authenticated routes (dashboard, beer detail, etc.)
+│   ├── (auth)/           # Unauthenticated routes: login, register
+│   └── (app)/            # Authenticated routes: dashboard, beer detail
 ├── components/           # Reusable UI components
 │   ├── BeerCard.tsx      # Display-only card; emits events upward
 │   ├── BeerForm.tsx      # Shared create/edit form
 │   ├── Header.tsx        # Navigation bar with branding
 │   └── Statistics.tsx    # Aggregate stats display
-├── contexts/             # React contexts
-│   ├── AuthContext       # Auth state, login/logout, token refresh
-│   └── LanguageContext   # Multi-language string lookup
+├── contexts/             # React Contexts
+│   ├── AuthContext.tsx   # Auth state, login/logout, token refresh
+│   └── LanguageContext.tsx # Multi-language string lookup
 ├── lib/                  # Shared utilities
 │   ├── api-client.ts     # Axios instance with Bearer token interceptor
 │   ├── beerStore.ts      # Zustand store for beer collection state
-│   └── tokens.ts         # AsyncStorage helpers for token persistence
-├── src/                  # Additional source modules
+│   └── tokens.ts         # SecureStore helpers for token persistence
+├── src/                  # Additional modules (screens, hooks, theme, types)
 ├── assets/               # Images, fonts, icons
 ├── __tests__/            # Jest test suites
 ├── app.json              # Expo configuration
-├── babel.config.js       # Babel config (Expo preset)
 └── tsconfig.json         # TypeScript configuration
 ```
 
@@ -62,11 +66,11 @@ beer-cellar-mobile/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) 18+
-- [Expo CLI](https://docs.expo.dev/get-started/installation/): `npm install -g expo-cli`
-- For iOS: macOS with Xcode and iOS Simulator installed
-- For Android: Android Studio with an AVD (Android Virtual Device) configured
-- A running instance of the Beer Cellar backend
+- [Node.js](https://nodejs.org/) 20+
+- Expo Go app (for running on a physical device)
+- For iOS builds: macOS with Xcode and iOS Simulator
+- For Android builds: Android Studio with a configured AVD
+- A running instance of the [beer-cellar-backend](https://github.com/luizgdona/beer-cellar-backend)
 
 ### Clone and install
 
@@ -78,21 +82,25 @@ npm install
 
 ### Configure environment
 
-Create a `.env` file in the project root:
+```bash
+cp .env.example .env
+```
+
+Set `EXPO_PUBLIC_API_URL` to your backend URL:
 
 ```
 EXPO_PUBLIC_API_URL=http://<your-backend-host>:<port>/api/v1
 ```
 
-> Expo exposes variables prefixed with `EXPO_PUBLIC_` to the app bundle. Never store secrets with this prefix — they are visible in the compiled bundle.
+> Variables prefixed with `EXPO_PUBLIC_` are embedded into the app bundle at build time. Never store secrets with this prefix — they are visible in the compiled output.
 
-### Run on iOS
+### Run on iOS Simulator
 
 ```bash
 npx expo start --ios
 ```
 
-### Run on Android
+### Run on Android Emulator
 
 ```bash
 npx expo start --android
@@ -104,36 +112,24 @@ npx expo start --android
 npx expo start
 ```
 
-Scan the QR code with the Expo Go app on your device.
+Scan the QR code with the Expo Go app.
 
 ---
 
 ## Building for Production
 
-Builds are managed by [EAS Build](https://docs.expo.dev/build/introduction/). Install the EAS CLI first:
+Builds are managed by [EAS Build](https://docs.expo.dev/build/introduction/).
 
 ```bash
 npm install -g eas-cli
 eas login
 ```
 
-### iOS
-
-```bash
-npx eas build --platform ios
-```
-
-### Android
-
-```bash
-npx eas build --platform android
-```
-
-### Both platforms
-
-```bash
-npx eas build --platform all
-```
+| Platform | Command |
+|---|---|
+| iOS | `npx eas build --platform ios` |
+| Android | `npx eas build --platform android` |
+| Both | `npx eas build --platform all` |
 
 Artifacts are available in the [Expo dashboard](https://expo.dev/) and can be submitted to the App Store and Google Play via `eas submit`.
 
@@ -155,33 +151,31 @@ Runs Jest with the React Native Testing Library preset. Tests live in `__tests__
 |---|---|---|
 | `EXPO_PUBLIC_API_URL` | Yes | Base URL for the Beer Cellar backend API (e.g. `http://localhost:3001/api/v1`) |
 
-All client-side variables must use the `EXPO_PUBLIC_` prefix — this is Expo's convention for embedding values into the app bundle at build time. Do not use this prefix for secrets; they will be visible in the compiled output.
-
 ---
 
 ## Key Design Decisions
 
-**Expo Managed Workflow** — The app uses Expo's managed workflow to avoid maintaining native iOS/Android project files. This enables over-the-air (OTA) updates via EAS Update without a full App Store release cycle.
+**Expo Managed Workflow** — Avoids maintaining native iOS/Android project files. Enables over-the-air (OTA) updates via EAS Update without a full App Store release cycle.
 
-**Expo Router** — File-based routing mirrors Next.js conventions used in the web frontend, reducing context-switching for developers working across both clients. Typed routes (`experiments.typedRoutes: true`) catch navigation errors at compile time.
+**Expo Router** — File-based routing mirrors Next.js conventions used in the web frontend, reducing context-switching. Typed routes (`experiments.typedRoutes: true`) catch navigation errors at compile time.
 
-**Zustand for state** — Chosen over Redux for its minimal API surface and zero boilerplate. The beer collection store (`lib/beerStore.ts`) handles loading, caching, and mutation of beer data with straightforward actions.
+**Expo SecureStore for token storage** — Auth tokens (access + refresh) are stored in `expo-secure-store`, which uses the iOS Keychain and Android Keystore under the hood. Components access auth state only via `AuthContext` — never by reading storage directly.
 
-**AsyncStorage for token persistence** — Auth tokens (access + refresh) are stored in AsyncStorage and managed exclusively through `lib/tokens.ts`. Components access auth state only via `AuthContext` — never by reading storage directly.
-
-**Axios with interceptor** — The API client (`lib/api-client.ts`) attaches the Bearer token to every request via a request interceptor and handles 401 responses for token refresh. This keeps auth logic out of individual screens.
+**Axios with interceptor** — The API client (`lib/api-client.ts`) attaches the Bearer token to every request via a request interceptor and handles 401 responses for token refresh. Auth logic stays out of individual screens.
 
 **New Architecture enabled** — `newArchEnabled: true` in `app.json` activates the Fabric renderer and JavaScript Interface (JSI), providing better performance for animations and bridge-free native module calls.
 
-**Portrait-only orientation** — The UI is designed for single-hand mobile use. Locking to portrait avoids layout complexity and ensures a consistent experience across devices.
+**Zustand for state** — Chosen over Redux for its minimal API surface and zero boilerplate. The beer collection store handles loading, caching, and mutation of beer data with straightforward actions.
+
+**Portrait-only orientation** — Designed for single-hand mobile use. Locking to portrait avoids layout complexity and ensures a consistent experience across devices.
 
 ---
 
-## Connection to Backend
+## Connecting to the Backend
 
-This app requires the Beer Cellar backend to be running and reachable at the URL set in `EXPO_PUBLIC_API_URL`. The backend exposes a REST API at `/api/v1` with JWT-based authentication (access token: 15 min, refresh token: 7 days).
+Set `EXPO_PUBLIC_API_URL` to the URL of your backend instance. The backend exposes a REST API at `/api/v1` with JWT-based authentication (access token: 15 min, refresh token: 7 days).
 
-Set `EXPO_PUBLIC_API_URL` to point to your backend instance before starting the app or building for production.
+See [beer-cellar-backend](https://github.com/luizgdona/beer-cellar-backend) for full API documentation and setup instructions.
 
 ---
 
