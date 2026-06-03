@@ -7,7 +7,7 @@ export interface AnalyticsEvent {
   timestamp: number;
   type: 'error' | 'event' | 'performance' | 'user_action';
   name: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   userId?: string;
   sessionId: string;
   appVersion: string;
@@ -63,7 +63,7 @@ class AnalyticsManager {
     return 'mobile-web';
   }
 
-  trackEvent(name: string, data?: Record<string, any>): void {
+  trackEvent(name: string, data?: Record<string, unknown>): void {
     const event: AnalyticsEvent = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: Date.now(),
@@ -131,7 +131,7 @@ class AnalyticsManager {
 
   async trackUserAction(
     actionName: string,
-    actionData?: Record<string, any>,
+    actionData?: Record<string, unknown>,
     userId?: string
   ): Promise<void> {
     const event: AnalyticsEvent = {
@@ -227,6 +227,10 @@ class AnalyticsManager {
 
 export const analyticsManager = new AnalyticsManager();
 
+interface PerformanceWithMemory extends Performance {
+  memory?: { usedJSHeapSize?: number };
+}
+
 // Performance tracking helper
 export const measurePerformance = async <T,>(
   fn: () => Promise<T>,
@@ -234,12 +238,12 @@ export const measurePerformance = async <T,>(
   userId?: string
 ): Promise<T> => {
   const startTime = Date.now();
-  const startMemory = (performance as any)?.memory?.usedJSHeapSize;
+  const startMemory = (performance as PerformanceWithMemory)?.memory?.usedJSHeapSize;
 
   try {
     const result = await fn();
     const duration = Date.now() - startTime;
-    const endMemory = (performance as any)?.memory?.usedJSHeapSize;
+    const endMemory = (performance as PerformanceWithMemory)?.memory?.usedJSHeapSize;
 
     await analyticsManager.trackPerformance(
       {
@@ -255,7 +259,7 @@ export const measurePerformance = async <T,>(
     return result;
   } catch (error) {
     const duration = Date.now() - startTime;
-    const endMemory = (performance as any)?.memory?.usedJSHeapSize;
+    const endMemory = (performance as PerformanceWithMemory)?.memory?.usedJSHeapSize;
 
     await analyticsManager.trackPerformance(
       {

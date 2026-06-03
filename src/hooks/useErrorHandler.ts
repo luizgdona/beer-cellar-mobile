@@ -87,11 +87,11 @@ export const useErrorHandler = () => {
 };
 
 export const useAnalytics = () => {
-  const trackEvent = useCallback(async (name: string, data?: Record<string, any>) => {
+  const trackEvent = useCallback(async (name: string, data?: Record<string, unknown>) => {
     analyticsManager.trackEvent(name, data);
   }, []);
 
-  const trackUserAction = useCallback(async (actionName: string, actionData?: Record<string, any>) => {
+  const trackUserAction = useCallback(async (actionName: string, actionData?: Record<string, unknown>) => {
     analyticsManager.trackUserAction(actionName, actionData);
   }, []);
 
