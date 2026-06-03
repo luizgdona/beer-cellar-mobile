@@ -32,7 +32,10 @@
           "photosPermission": "Beer Cellar needs access to your photos to add beer images.",
           "cameraPermission": "Beer Cellar needs access to your camera to take beer photos."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true
