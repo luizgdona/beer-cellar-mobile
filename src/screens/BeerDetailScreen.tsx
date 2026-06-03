@@ -8,14 +8,22 @@ import {
   Alert,
 } from 'react-native';
 import apiClient from '../lib/apiClient';
-import { useBeerStore } from '../stores/beerStore';
+import { useBeerStore, Beer } from '../stores/beerStore';
 import { useAppTheme } from '../theme/useAppTheme';
 
-export default function BeerDetailScreen({ route, navigation }: any) {
+interface Route {
+  params: { beerId: string };
+}
+
+interface Navigation {
+  goBack: () => void;
+}
+
+export default function BeerDetailScreen({ route, navigation }: { route: Route; navigation: Navigation }) {
   const theme = useAppTheme();
   const { beerId } = route.params;
   const { deleteBeer, consumeBeer } = useBeerStore();
-  const [beer, setBeer] = useState<any>(null);
+  const [beer, setBeer] = useState<Beer | null>(null);
   const [loading, setLoading] = useState(true);
   const styles = createStyles(theme);
 
@@ -27,7 +35,7 @@ export default function BeerDetailScreen({ route, navigation }: any) {
     try {
       const response = await apiClient.get(`/beers/${beerId}`);
       setBeer(response.data.data.beer);
-    } catch (error) {
+    } catch {
       Alert.alert('Error', 'Failed to load beer details');
       navigation.goBack();
     } finally {
@@ -48,7 +56,7 @@ export default function BeerDetailScreen({ route, navigation }: any) {
               await deleteBeer(beerId);
               Alert.alert('Success', 'Beer deleted');
               navigation.goBack();
-            } catch (error) {
+            } catch {
               Alert.alert('Error', 'Failed to delete beer');
             }
           },
@@ -62,7 +70,7 @@ export default function BeerDetailScreen({ route, navigation }: any) {
       await consumeBeer(beerId);
       Alert.alert('Success', 'Beer marked as consumed');
       fetchBeer();
-    } catch (error) {
+    } catch {
       Alert.alert('Error', 'Failed to update beer');
     }
   };

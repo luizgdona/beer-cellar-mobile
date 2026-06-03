@@ -7,18 +7,25 @@ import {
   StyleSheet,
   RefreshControl,
   TextInput,
+  ListRenderItemInfo,
 } from 'react-native';
-import { useBeerStore } from '../stores/beerStore';
+import { useBeerStore, Beer } from '../stores/beerStore';
 import { useAppTheme } from '../theme/useAppTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 
-export default function BeerListScreen({ navigation }: any) {
+type FilterStatus = 'all' | 'available' | 'consumed';
+
+interface Navigation {
+  navigate: (screen: string, params?: Record<string, unknown>) => void;
+}
+
+export default function BeerListScreen({ navigation }: { navigation: Navigation }) {
   const theme = useAppTheme();
   const { t } = useLanguage();
-  const { beers, fetchBeers, isLoading } = useBeerStore();
+  const { beers, fetchBeers } = useBeerStore();
   const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'available' | 'consumed'>('all');
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const styles = createStyles(theme);
 
   useEffect(() => {
@@ -34,7 +41,7 @@ export default function BeerListScreen({ navigation }: any) {
     setRefreshing(false);
   };
 
-  const filteredBeers = beers.filter((beer: any) => {
+  const filteredBeers = beers.filter((beer: Beer) => {
     let match = true;
 
     if (searchTerm) {
@@ -48,7 +55,7 @@ export default function BeerListScreen({ navigation }: any) {
     return match;
   });
 
-  const renderBeerItem = ({ item }: any) => (
+  const renderBeerItem = ({ item }: ListRenderItemInfo<Beer>) => (
     <TouchableOpacity
       style={styles.beerCard}
       onPress={() => navigation.navigate('BeerDetail', { beerId: item.id })}
@@ -86,14 +93,14 @@ export default function BeerListScreen({ navigation }: any) {
         />
 
         <View style={styles.filterButtons}>
-          {['all', 'available', 'consumed'].map((status) => (
+          {(['all', 'available', 'consumed'] as FilterStatus[]).map((status) => (
             <TouchableOpacity
               key={status}
               style={[
                 styles.filterButton,
                 filterStatus === status && styles.filterButtonActive,
               ]}
-              onPress={() => setFilterStatus(status as any)}
+              onPress={() => setFilterStatus(status)}
             >
               <Text
                 style={[
@@ -111,7 +118,7 @@ export default function BeerListScreen({ navigation }: any) {
       <FlatList
         data={filteredBeers}
         renderItem={renderBeerItem}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item: Beer) => item.id}
         contentContainerStyle={styles.listContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={
