@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { isAxiosError } from 'axios';
 import apiClient from '../lib/apiClient';
 
 export interface Beer {
@@ -38,7 +39,13 @@ interface BeerStore {
   clearError: () => void;
 }
 
-export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore> | ((state: BeerStore) => Partial<BeerStore>)) => void) => ({
+const extractErrorMessage = (err: unknown): string => {
+  if (isAxiosError(err)) return err.response?.data?.error ?? err.message;
+  if (err instanceof Error) return err.message;
+  return 'Unknown error';
+};
+
+export const useBeerStore = create<BeerStore>((set) => ({
   beers: [],
   isLoading: false,
   error: null,
@@ -52,8 +59,8 @@ export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore>
 
       const response = await apiClient.get(`/beers?${params.toString()}`);
       set({ beers: response.data.data.beers });
-    } catch (error: any) {
-      set({ error: error instanceof Error ? error.message : 'Unknown error' });
+    } catch (err) {
+      set({ error: extractErrorMessage(err) });
     } finally {
       set({ isLoading: false });
     }
@@ -63,12 +70,12 @@ export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore>
     set({ isLoading: true, error: null });
     try {
       const response = await apiClient.post('/beers', beerData);
-      const newBeer = response.data.data.beer;
-      set((state: any) => ({ beers: [newBeer, ...state.beers] }));
+      const newBeer = response.data.data.beer as Beer;
+      set((state) => ({ beers: [newBeer, ...state.beers] }));
       return newBeer;
-    } catch (error: any) {
-      set({ error: error.message });
-      throw error;
+    } catch (err) {
+      set({ error: extractErrorMessage(err) });
+      throw err;
     } finally {
       set({ isLoading: false });
     }
@@ -78,14 +85,14 @@ export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore>
     set({ isLoading: true, error: null });
     try {
       const response = await apiClient.put(`/beers/${id}`, beerData);
-      const updatedBeer = response.data.data.beer;
-      set((state: any) => ({
-        beers: state.beers.map((beer: Beer) => (beer.id === id ? updatedBeer : beer)),
+      const updatedBeer = response.data.data.beer as Beer;
+      set((state) => ({
+        beers: state.beers.map((beer) => (beer.id === id ? updatedBeer : beer)),
       }));
       return updatedBeer;
-    } catch (error: any) {
-      set({ error: error.message });
-      throw error;
+    } catch (err) {
+      set({ error: extractErrorMessage(err) });
+      throw err;
     } finally {
       set({ isLoading: false });
     }
@@ -95,10 +102,10 @@ export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore>
     set({ isLoading: true, error: null });
     try {
       await apiClient.delete(`/beers/${id}`);
-      set((state: any) => ({ beers: state.beers.filter((beer: Beer) => beer.id !== id) }));
-    } catch (error: any) {
-      set({ error: error.message });
-      throw error;
+      set((state) => ({ beers: state.beers.filter((beer) => beer.id !== id) }));
+    } catch (err) {
+      set({ error: extractErrorMessage(err) });
+      throw err;
     } finally {
       set({ isLoading: false });
     }
@@ -108,14 +115,14 @@ export const useBeerStore = create<BeerStore>((set: (partial: Partial<BeerStore>
     set({ isLoading: true, error: null });
     try {
       const response = await apiClient.patch(`/beers/${id}/consume`);
-      const consumedBeer = response.data.data.beer;
-      set((state: any) => ({
-        beers: state.beers.map((beer: Beer) => (beer.id === id ? consumedBeer : beer)),
+      const consumedBeer = response.data.data.beer as Beer;
+      set((state) => ({
+        beers: state.beers.map((beer) => (beer.id === id ? consumedBeer : beer)),
       }));
       return consumedBeer;
-    } catch (error: any) {
-      set({ error: error.message });
-      throw error;
+    } catch (err) {
+      set({ error: extractErrorMessage(err) });
+      throw err;
     } finally {
       set({ isLoading: false });
     }
