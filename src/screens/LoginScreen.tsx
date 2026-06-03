@@ -9,12 +9,13 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { isAxiosError } from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppTheme } from '../theme/useAppTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface LoginScreenProps {
-  navigation: any;
+  navigation: { navigate: (screen: string) => void };
 }
 
 export default function LoginScreen({ navigation }: LoginScreenProps) {
@@ -34,8 +35,9 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
     try {
       await login(email, password);
-    } catch (error: any) {
-      Alert.alert(t('auth.login'), error.response?.data?.error || t('common.error'));
+    } catch (err) {
+      const msg = isAxiosError(err) ? err.response?.data?.error : undefined;
+      Alert.alert(t('auth.login'), msg || t('common.error'));
     }
   };
 

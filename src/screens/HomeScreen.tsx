@@ -13,7 +13,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 export default function HomeScreen() {
   const theme = useAppTheme();
   const { t } = useLanguage();
-  const { beers, fetchBeers, isLoading } = useBeerStore();
+  const { beers, fetchBeers } = useBeerStore();
   const [refreshing, setRefreshing] = useState(false);
   const styles = createStyles(theme);
 
@@ -28,11 +28,12 @@ export default function HomeScreen() {
   };
 
   const totalBeers = beers.length;
-  const consumedBeers = beers.filter((b: any) => b.consumed).length;
-  const availableBeers = beers.filter((b: any) => !b.consumed).length;
+  const consumedBeers = beers.filter((b) => b.consumed).length;
+  const availableBeers = beers.filter((b) => !b.consumed).length;
+  const ratedBeers = beers.filter((b) => b.rating);
   const averageRating =
-    beers.filter((b: any) => b.rating).length > 0
-      ? beers.reduce((sum: number, b: any) => sum + (b.rating || 0), 0) / beers.filter((b: any) => b.rating).length
+    ratedBeers.length > 0
+      ? beers.reduce((sum, b) => sum + (b.rating ?? 0), 0) / ratedBeers.length
       : 0;
 
   return (

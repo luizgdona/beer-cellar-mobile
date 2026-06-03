@@ -9,12 +9,13 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { isAxiosError } from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppTheme } from '../theme/useAppTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface RegisterScreenProps {
-  navigation: any;
+  navigation: { navigate: (screen: string) => void; goBack: () => void };
 }
 
 export default function RegisterScreen({ navigation }: RegisterScreenProps) {
@@ -49,8 +50,9 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
     try {
       await register(formData.email, formData.password, formData.name);
-    } catch (error: any) {
-      Alert.alert(t('auth.register'), error.response?.data?.error || t('common.error'));
+    } catch (err) {
+      const msg = isAxiosError(err) ? err.response?.data?.error : undefined;
+      Alert.alert(t('auth.register'), msg || t('common.error'));
     }
   };
 
